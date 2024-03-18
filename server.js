@@ -7,7 +7,10 @@ const sqlite3 = require('sqlite3').verbose();
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const sessionSecret = crypto.randomBytes(64).toString('hex');
-const { register, login } = require('./authController');
+const { register, login } = require('./controllers/authController');
+const { sendMessage } = require('./controllers/messageController');
+const {fetchReceivedMessages}= require('./controllers/messageController');
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -50,6 +53,12 @@ app.post('/register', register);
 
 // Login endpoint
 app.post('/login', login);
+
+// for message 
+app.post('/send-message', sendMessage);
+
+// API end point to fetch received messages for a user
+app.get('/messages', fetchReceivedMessages);
 
 // Start server
 app.listen(PORT, () => {
