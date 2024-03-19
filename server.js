@@ -1,5 +1,6 @@
 const express = require('express');
 const session = require('express-session');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
@@ -13,7 +14,7 @@ const {fetchReceivedMessages}= require('./controllers/messageController');
 
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 // Connect to SQLite database
 const db = new sqlite3.Database('./chatting.db');
@@ -30,7 +31,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(passport.initialize());
 app.use(passport.session());
-
+app.use(cors());
 
 // Passport serializeUser and deserializeUser functions
 passport.serializeUser((user, done) => {

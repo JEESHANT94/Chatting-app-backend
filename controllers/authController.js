@@ -34,23 +34,31 @@ function register(req, res) {
     });
   });
   }
-  function login(req, res, next) {
-    passport.authenticate('local', (err, user, info) => {
+  function login(req, res) {
+    const { username, password } = req.body;
+
+    // Check if username exists in the database
+    db.get('SELECT * FROM users WHERE username = ?', [username], (err, row) => {
         if (err) {
             return res.status(500).json({ message: 'Internal server error.' });
         }
-        if (!user) {
+        if (!row) {
             return res.status(401).json({ message: 'Incorrect username or password.' });
         }
-        // If authentication is successful, manually log in the user
-        req.logIn(user, (err) => {
+        // If username exists, check if the password matches
+        bcrypt.compare(password, row.password, (err, result) => {
             if (err) {
                 return res.status(500).json({ message: 'Internal server error.' });
             }
+            if (!result) {
+                return res.status(401).json({ message: 'Incorrect username or password.' });
+            }
+            // If password matches, return a successful login response
             return res.json({ message: 'Login successful.' });
         });
-    })(req, res, next);
+    });
 }
+
 
 
   module.exports = { register, login };
