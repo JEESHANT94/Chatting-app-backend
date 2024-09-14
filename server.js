@@ -11,7 +11,7 @@ const sessionSecret = crypto.randomBytes(64).toString('hex');
 const { register, login } = require('./controllers/authController');
 const { sendMessage } = require('./controllers/messageController');
 const {fetchReceivedMessages}= require('./controllers/messageController');
-
+ 
 
 const app = express();
 const PORT = process.env.PORT || 3001;
